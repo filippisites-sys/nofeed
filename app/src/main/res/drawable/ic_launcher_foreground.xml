@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- NF monogram — two rectangles forming stylized letters -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M30,30 L30,78 L38,78 L38,58 L55,78 L65,78 L65,30 L57,30 L57,50 L40,30 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M68,30 L68,78 L76,78 L76,58 L88,58 L88,50 L76,50 L76,38 L88,38 L88,30 Z" />
+</vector>

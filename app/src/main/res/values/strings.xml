@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NoFeed</string>
+    <string name="accessibility_service_description">Monitora o Instagram para bloquear o feed e evitar scroll infinito.</string>
+    <string name="feed_blocked_title">Feed bloqueado</string>
+    <string name="feed_blocked_subtitle">Foque no que importa.</string>
+    <string name="open_dms">Abrir DMs</string>
+    <string name="new_post">Novo Post</string>
+</resources>
