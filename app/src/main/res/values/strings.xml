@@ -6,4 +6,5 @@
     <string name="feed_blocked_subtitle">Foque no que importa.</string>
     <string name="open_dms">Abrir DMs</string>
     <string name="new_post">Novo Post</string>
+    <string name="pause_5min">Pausar por 5 min</string>
 </resources>

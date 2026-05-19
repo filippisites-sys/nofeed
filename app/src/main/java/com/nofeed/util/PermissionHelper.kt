@@ -9,12 +9,12 @@ object PermissionHelper {
         Settings.canDrawOverlays(context)
 
     fun isAccessibilityServiceEnabled(context: Context): Boolean {
-        val componentName = "${context.packageName}/.service.FeedBlockerAccessibilityService"
         val enabled = Settings.Secure.getString(
             context.contentResolver,
             Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
         ) ?: return false
-        return enabled.split(":").any { it.equals(componentName, ignoreCase = true) }
+        // Android stores: "com.nofeed/com.nofeed.service.FeedBlockerAccessibilityService"
+        return enabled.contains(context.packageName, ignoreCase = true)
     }
 
     fun allGranted(context: Context): Boolean =

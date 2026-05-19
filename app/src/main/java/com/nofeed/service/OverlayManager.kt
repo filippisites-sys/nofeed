@@ -26,6 +26,10 @@ class OverlayManager(private val context: Context) {
         view.findViewById<android.widget.Button>(R.id.btn_new_post).setOnClickListener {
             openUri("instagram://camera")
         }
+        view.findViewById<android.widget.Button>(R.id.btn_pause).setOnClickListener {
+            FeedBlockerAccessibilityService.pauseMinutes(5)
+            hide()
+        }
 
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,

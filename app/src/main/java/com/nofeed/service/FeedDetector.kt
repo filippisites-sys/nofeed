@@ -4,29 +4,20 @@ import android.view.accessibility.AccessibilityNodeInfo
 
 object FeedDetector {
 
+    // Block everything in Instagram EXCEPT the DM screens.
+    // DMs are allowed; everything else (feed, explore, reels, profile) is blocked.
     fun isOnFeed(root: AccessibilityNodeInfo?): Boolean {
         root ?: return false
-        return isHomeTabSelected(root) && !isDMScreenVisible(root)
-    }
-
-    private fun isHomeTabSelected(root: AccessibilityNodeInfo): Boolean {
-        val candidates = mutableListOf<AccessibilityNodeInfo>()
-        collectByText(root, "Home", candidates)
-        collectByText(root, "Início", candidates)      // pt-BR
-        collectByText(root, "Inicio", candidates)      // es
-        return candidates.any { node ->
-            node.isSelected || node.isChecked ||
-                node.parent?.isSelected == true ||
-                node.parent?.isChecked == true
-        }
+        return !isDMScreenVisible(root)
     }
 
     private fun isDMScreenVisible(root: AccessibilityNodeInfo): Boolean {
+        val dmTexts = listOf(
+            "Direct", "Messages", "Mensagens", "Chats",
+            "New message", "Nova mensagem", "Inbox", "Caixa de entrada"
+        )
         val candidates = mutableListOf<AccessibilityNodeInfo>()
-        collectByText(root, "Direct", candidates)
-        collectByText(root, "Messages", candidates)
-        collectByText(root, "Mensagens", candidates)
-        collectByText(root, "Chats", candidates)
+        dmTexts.forEach { text -> collectByText(root, text, candidates) }
         return candidates.isNotEmpty()
     }
 
