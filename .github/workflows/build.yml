@@ -19,8 +19,8 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      - name: Accept Android SDK licenses
-        run: yes | sdkmanager --licenses
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
 
       - name: Install Android SDK Platform 34
         run: sdkmanager "platforms;android-34" "build-tools;34.0.0"
