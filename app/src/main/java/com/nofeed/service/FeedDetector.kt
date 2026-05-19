@@ -1,14 +1,38 @@
 package com.nofeed.service
 
+import android.graphics.Rect
 import android.view.accessibility.AccessibilityNodeInfo
 
 object FeedDetector {
 
-    // Block everything in Instagram EXCEPT the DM screens.
-    // DMs are allowed; everything else (feed, explore, reels, profile) is blocked.
     fun isOnFeed(root: AccessibilityNodeInfo?): Boolean {
         root ?: return false
         return !isDMScreenVisible(root)
+    }
+
+    // Returns the bounding rect of the feed's main scrollable container.
+    // Returns null if the feed RecyclerView isn't found yet (still loading).
+    fun findFeedBounds(root: AccessibilityNodeInfo): Rect? {
+        val candidates = mutableListOf<Rect>()
+        collectFeedCandidates(root, candidates)
+        return candidates
+            .filter { it.width() > 0 && it.height() > 200 }
+            .maxByOrNull { it.height() }
+    }
+
+    private fun collectFeedCandidates(node: AccessibilityNodeInfo, result: MutableList<Rect>) {
+        if (node.isScrollable) {
+            val rect = Rect()
+            node.getBoundsInScreen(rect)
+            // Feed is a wide vertical container. Stories are a short horizontal strip.
+            // Filter: width must be large (full-width), height > 200dp worth of pixels.
+            if (rect.width() > rect.height() * 0.4 && rect.height() > 200) {
+                result.add(rect)
+            }
+        }
+        for (i in 0 until node.childCount) {
+            node.getChild(i)?.let { collectFeedCandidates(it, result) }
+        }
     }
 
     private fun isDMScreenVisible(root: AccessibilityNodeInfo): Boolean {

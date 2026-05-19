@@ -14,15 +14,11 @@ class FeedBlockerAccessibilityService : AccessibilityService() {
         const val PREFS_NAME = "nofeed_prefs"
         const val KEY_BLOCKING_ENABLED = "blocking_enabled"
 
-        // Pause until this timestamp (epoch ms). 0 = not paused.
         var pauseUntil: Long = 0
-
         fun pauseMinutes(minutes: Int) {
             pauseUntil = System.currentTimeMillis() + minutes * 60 * 1000L
         }
-
-        fun isPaused(): Boolean =
-            System.currentTimeMillis() < pauseUntil
+        fun isPaused() = System.currentTimeMillis() < pauseUntil
     }
 
     override fun onServiceConnected() {
@@ -33,18 +29,19 @@ class FeedBlockerAccessibilityService : AccessibilityService() {
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
         if (event.packageName?.toString() != "com.instagram.android") return
-        if (!prefs.getBoolean(KEY_BLOCKING_ENABLED, false)) {
-            if (overlayManager.isShowing()) overlayManager.hide()
-            return
-        }
-        if (isPaused()) {
-            if (overlayManager.isShowing()) overlayManager.hide()
+        if (!prefs.getBoolean(KEY_BLOCKING_ENABLED, false) || isPaused()) {
+            overlayManager.hide()
             return
         }
 
         val root = rootInActiveWindow ?: return
+
         if (FeedDetector.isOnFeed(root)) {
-            overlayManager.show()
+            val bounds = FeedDetector.findFeedBounds(root)
+            if (bounds != null) {
+                overlayManager.showAtBounds(bounds)
+            }
+            // If bounds not found yet (still loading), keep current state
         } else {
             overlayManager.hide()
         }
